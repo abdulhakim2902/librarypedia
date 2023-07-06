@@ -4,6 +4,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { UserModule, User } from 'src/user';
+import { AuthModule } from 'src/auth';
 
 @Module({
   imports: [
@@ -24,11 +26,13 @@ import { join } from 'path';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        entities: [],
+        entities: [User],
         synchronize: true,
       }),
       inject: [ConfigService],
     }),
+    AuthModule,
+    UserModule,
   ],
   controllers: [],
   providers: [],
