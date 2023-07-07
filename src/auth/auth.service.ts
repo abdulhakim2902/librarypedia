@@ -41,15 +41,12 @@ export class AuthService {
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('UnauthorizedUser', HttpStatus.UNAUTHORIZED);
     }
 
     const payload = { id: user.id, username: user.username };
     const accessToken = await this.jwtService.signAsync(payload);
 
-    return {
-      user: { id: user.id, username: user.fullName },
-      token: { accessToken },
-    };
+    return { accessToken };
   }
 }
