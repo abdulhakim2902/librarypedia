@@ -3,6 +3,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import {
   ClassSerializerInterceptor,
+  HttpStatus,
   INestApplication,
   ValidationPipe,
 } from '@nestjs/common';
@@ -15,7 +16,13 @@ async function bootstrap() {
 
   await initSwagger(app);
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+    }),
+  );
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   await app.listen(port, () => {
