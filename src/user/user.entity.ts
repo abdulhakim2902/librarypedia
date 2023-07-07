@@ -1,5 +1,6 @@
 import {
   BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
@@ -61,6 +62,32 @@ export class User {
   @BeforeInsert()
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
+  }
+
+  @BeforeInsert()
+  insertName() {
+    if (this.firstName) {
+      const firstName = this.firstName.toLowerCase();
+      this.firstName = capitalize(firstName);
+    }
+
+    if (this.lastName) {
+      const lastName = this.lastName.toLowerCase();
+      this.lastName = capitalize(lastName);
+    }
+  }
+
+  @BeforeUpdate()
+  updateName() {
+    if (this.firstName) {
+      const firstName = this.firstName.toLowerCase();
+      this.firstName = capitalize(firstName);
+    }
+
+    if (this.lastName) {
+      const lastName = this.lastName.toLowerCase();
+      this.lastName = capitalize(lastName);
+    }
   }
 
   get fullName(): string {
